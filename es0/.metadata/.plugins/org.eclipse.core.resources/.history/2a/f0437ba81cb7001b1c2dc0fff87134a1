@@ -1,0 +1,110 @@
+System -msglog workshift
+
+ 
+Dispatch m1 : m1(V)
+Dispatch m2 : m2(V) 
+Event switch : switch(V)
+   
+
+Context ctxworkshift ip [host="localhost" port=8095]
+
+QActor workshiftmanager context ctxworkshift{
+
+	State start initial { 	    
+		discardMsg Off
+ 	}
+ 	Transition t0 
+ 		whenEvent switch -> morning 
+ 	
+ 	State morning{
+  		println("Mattino: gestisco messaggi di tipo m1")
+  	}
+ 	Transition t0 
+ 		whenEvent switch -> afternoon
+ 		whenMsg m1 -> handleM1
+ 	
+ 	State handleM1{
+ 		onMsg( m1:m1(V) ){
+ 			println("Mattino: il messaggio m1 ricevuto è:${payloadArg(0)}")
+ 			delay 1000  
+ 		} 
+ 	}
+ 	Goto morning
+ 
+
+ 	State afternoon{
+ 		println("Pomeriggio: gestisco messaggi di tipo m2")
+		
+   	} 
+ 	Transition t1 
+ 		whenEvent switch -> night
+ 		whenMsg m2 -> handleM2
+ 		
+ 	State handleM2{
+ 		onMsg( m2:m2(V) ){
+ 			println("Pomerggio: il messaggio m2 ricevuto è:${payloadArg(0)}")
+ 			delay 1000  
+ 		}
+ 	}
+ 	Goto afternoon
+
+ 	State night{ 
+ 		println("Notte: non gestisco alcun tipo di messaggio ma accodo le richieste per rispondere in futuro")
+   	}
+    Transition t2 whenEvent switch -> morning    
+ 
+}   
+ 
+/*
+	Mattino:    0:00-0:30    1:30-2:00
+	Pomeriggio: 0:30-0:60    2:00-2:30
+	Notte:      1:00-1:30	 2:30-3:00
+*/
+QActor clock context ctxworkshift{
+	State start initial{
+		println("Orologio partito!")
+	}
+	Goto morning
+	
+	State morning{
+		emit switch: switch(morning)
+		delay 30000
+	}
+	Goto afternoon
+	
+	State afternoon{
+		emit switch: switch(afternoon)
+		delay 30000
+	}
+	Goto night
+	
+	State night{
+		emit switch: switch(night)
+		delay 30000
+	}
+	Goto morning
+} 
+ 
+ 
+QActor sender context ctxworkshift{
+	State s0 initial { 	
+ 		 forward workshiftmanager -m m1 : m1(m1_mattina) //0 sec
+		 delay 15000
+		 forward workshiftmanager -m m1 : m1(m1_mattina) //15 sec
+		 forward workshiftmanager -m m2 : m2(m2_mattina) //16sec
+		 delay 20000
+		 forward workshiftmanager -m m1 : m1(m1_pomeriggio) //36 sec
+		 delay 14000
+		 forward workshiftmanager -m m2 : m2(m2_pomeriggio) //51 sec
+		 delay 16000
+		 forward workshiftmanager -m m1 : m1(m1_sera) //1:06 
+		 delay 15000 
+		 forward workshiftmanager -m m2 : m2(m2_sera) //1:21
+		 forward workshiftmanager -m m1 : m1(m1_sera) //1:21 
+		 delay 15000
+ 		 forward workshiftmanager -m m1 : m1(m1_mattina2) //1:36
+		 forward workshiftmanager -m m2 : m2(m2_mattina2) //1:36
+		
+	} 
+	
+}

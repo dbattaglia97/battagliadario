@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0092)file:///C:/Users/batta/Desktop/IDS/iss2021_resumablebw/userDocs/resumableBoundaryWalker.html -->
+<html><!--
+<link rel="stylesheet" type="text/css" href="../css/issStyle1.css">
+<script type="text/javascript" src="../css/issStyle.js"></script>
+--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">
+body
+{
+    margin-left:  30px;
+    margin-right: 30px;
+};
+
+P
+{
+    font-family: Tahoma;
+    font-size: 10pt;
+};
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+	font-size: 93%;
+}
+
+a:hover {
+    background-color: #cccccc;
+}
+
+
+hr {
+    clear: both;
+    height: 1px;
+    color: #242424;
+    background-color: transparent;
+}
+
+h1, h2, h3 {
+    color: #242424;
+    clear: left;
+    font: 100% Tahoma, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+top {
+	width: 100%;
+}
+
+
+#i {
+    color: #ff1010;
+}
+tt{
+	font-family: "Arial";
+    font-size: 90%;
+	color: #006600;
+}
+em{
+	font-family: "Arial";
+    font-size: 80%;
+	font-weight: bold;
+	border-style:solid;
+	border-color: #abe876;
+    color: #1632cc;
+}
+bc{
+	font-family: "Arial";
+	font-size: 90%;
+	font-weight: bold;
+    color: #990000;
+	background-color: #fcf8c7;
+}
+ks{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #0000CD	;
+	font-size: 90%;
+}
+kc{
+	font-family: "Arial";
+	font-weight: bold;
+    color: #008000	;
+	font-size: 90%;
+}
+pre{
+	font-family: "Consolas";
+	font-size: 85%;
+	background-color: #f5f5f5;
+	border: 1.5px solid silver;
+	padding: 5px;
+}
+m{
+	font-family: "Helvetica";
+	line-height: 100%;
+ 	font-size: 75%;
+}
+div.body{
+	 
+    font-size: 18px;
+}
+k{
+    color: #990000;
+	font-weight: bold;
+	font-size: 90%;
+}
+h1 {
+    font-size: 150%;
+    background-color: #b2c0ff;
+	padding: 10px;
+}
+
+h2 {
+    background-color: #9ed8ff;
+    font-size: 130%;
+}
+
+h3 {
+	background-color: #e6ccff;
+    font-size: 100%;
+}
+h4 {
+    background-color: #ccffcc;
+    font-size: 100%;
+	width: 95%;
+	border-radius: 5px;
+	padding: 2px;
+}
+h5 {
+    background-color: #d5ffb0;
+    font-size: 100%;
+
+}
+div.req{
+	background-color: #d9ffb3;
+    font-size: 18px;
+	width: 700px;
+    border: 3px solid green;
+    padding: 15px;
+    margin: 10px;
+}
+div.remark{
+	background-color: #E3F2FD;
+    border: 1.5px solid #d5f2ed;
+    padding: 15px;
+    margin: 10px;
+	border-radius: 25px;
+}
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+ol, ul, li {
+  margin: 0;
+  margin-left: 10px;
+  padding: 0;
+  padding-bottom: 5px;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+img {
+	border: 1.5px solid #d5f2ed
+
+}
+
+a, a:visited, a:active, a:link, a:hover {
+    text-decoration: underline;
+    color: #545454;
+    background-color: transparent;
+}
+
+div.wrapdesc{
+	width: 90%;
+	margin: auto;
+}
+
+div.imagedesc{
+	width: 85%;
+	margin: auto;
+}
+</style>
+    
+
+   
+<title>resumableBoundaryWalker</title></head>
+    
+<body>
+<div id="top">
+<h1>Lab ISS | the project resumableBoundaryWalker<font size="5"></font> </h1>
+</div>  
+
+<div class="body"> 
+<h2>Introduction</h2>
+This case-study starts to deal with the design and development of proactive/reactive software systems which work under user-control.
+ 
+<h2>Requirements</h2>
+
+ 
+<div class="remark">
+ 
+Design and build a software system (named from now on 'the application') that leads the robot described in 
+<a href="https://htmlpreview.github.io/?https://github.com/anatali/issLab2021/blob/master/it.unibo.virtualRobot2020/userDocs/VirtualRobot2021.html" target="lab"><em>VirtualRobot2021.html</em></a> 
+to walk along the boundary of a empty, rectangular room under user control. 
+<br>
+More specifically, the <ks>user story</ks> can be summarized as follows:
+<br>
+<table style="width:98%">
+<tbody>	
+
+<tr>
+<td style="width:65%">
+the robot is initially located at the <ks>HOME</ks> position, as shown in the picture on the rigth
+</td>
+<td><center><img src="./resumableBoundaryWalker_files/emptyGridWithHome.png" alt="emptyGridWithHome" width="35%"></center>
+</td>
+</tr>
+
+<tr>
+<td style="width:65%">
+ the application presents to the user a <ks>consoleGui</ks> similar to that shown in the picture on the rigth
+</td>
+<td><center><img src="./resumableBoundaryWalker_files/stopResumeConsole.png" alt="stopResumeConsole" width="35%"></center>
+</td>
+</tr>
+
+
+
+<tr>
+<td style="width:65%">
+when the user hits the button <k>RESUME</k> the robot <ks>starts or continue to walk</ks> along the boundary, while
+updating a <ks>robot-moves history</ks>;
+</td>
+<td> 
+</td>
+</tr>
+
+<tr>
+<td style="width:65%">
+when the user hits the button <k>STOP</k> the robot stop its journey, waiting for another <k>RESUME</k> ;
+</td>
+<td> 
+</td>
+</tr>
+
+<tr>
+<td style="width:65%">
+when the robot reachs its <ks>HOME</ks> again, the application <i>shows the robot-moves history</i> on the standard output device.
+</td>
+<td> 
+</td>
+</tr>
+
+
+ </tbody>
+</table>
+
+ 
+</div>
+
+ <h3>Delivery</h3>
+The customer <ks>hopes to receive</ks> a working prototype (written in Java ) of the application by <k>Monady 22 March</k>. 
+The name of this file (in pdf) should be:
+<pre>cognome_nome_resumablebw.pdf
+</pre>
+
+<h2>Requirement analysis</h2>
+
+<ul>
+<li>for <ks>robot</ks>: a device able to execute move commands sent over the network, as described in the document
+<a href="file:///C:/Users/batta/Desktop/VirtualRobot2021.html#commands" target="web"><em>VirtualRobot2021.html</em></a> provided by the customer; 
+</li>
+    <li>for <ks>walk</ks>: the robot moves forward, close to the room walls ;</li>
+    <li>for <ks>room</ks>: a conventional (rectangular) room of an house;</li>
+<li>for <ks>boundary</ks>: the perimeter of the room, that is physically delimited by solid <ks>walls</ks>;</li>
+    
+<li>for <ks>home</ks>: the corner in the left upper part of the room from which the robot starts moving;</li>
+<li>for <ks>journey</ks>: the path made by the robot around the room;</li>
+
+    <li>for <ks>user control</ks>: user can stop or resume the journey of the robot;</li>
+<li>for <ks>robot-moves history</ks>: a representation of the moves made by the robot;</li>
+     <li>for <ks>consoleGui</ks>: a graphical user interface which can be used from the user in order to resume/stop the journey</li>
+The customer does not impose any requirement on the programming language used to develop the application.
+
+</ul>
+ 
+
+</div>
+
+<h2>Problem analysis</h2><table style="width:98%">
+<tbody>	
+<tr>
+<td style="width:60%">
+We must design and build a <k>distributed system</k> with two software macro-components:
+	<ol>
+	<li>the <a href="file:///C:/Users/batta/Desktop/IDS/VirtualRobot2021.html" target="web"><ks>VirtualRobot</ks></a>, given by the customer</li>
+	<li>our <ks>application</ks> that interacts with the robot</li>
+	</ol>
+A first scheme of the logical architecture  of the systems can be defined as shown in the figure.
+    
+Our application should
+<ul>
+<li>send a <em>request</em> to WEnv for the execution of a robot-move command or for the resume/stop commands</li>
+<li>handle the information sent by WEnv to application as a <em>dispatch</em> carrying the reply sent by WEnv to the robot-move command request </li>
+</ul>
+
+</td>
+    
+
+<td>  <center><img src="./resumableBoundaryWalker_files/logicArch.png" alt="logicArch0" width="100%"></center>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Robot-Moves History</h3>
+<p>The business logic is able to build two different types of robot-moves history:</p>
+<ul>
+<li>a string that represents the robot path expressed as a sequence of moves. For example:
+<pre>wwwlwwwlwwwlwwwl</pre>
+</li>
+<li>the places that the robot has explored, represented within a map of the room. For example
+<pre>|r, 1, 1, 1, 1, 
+        |1, 0, 0, 0, 1, 
+        |1, 0, 0, 0, 1, 
+        |1, 1, 1, 1, 1, 
+        </pre>
+In this representation, we suppose that:
+<ol>
+<li>r means: cell occupied by the robot</li>
+<li>0 means: cell not explored</li>
+<li>1 means: cell explored</li>
+<li>X means: cell occupied by an obstacle</li>
+</ol>
+</li>
+</ul>
+
+
+
+We observe that:
+<ul>
+<li>The specification of the exact 'nature' of our <em>application</em> software is left to the designer. 
+However, we can say here that is it <b>not a database, or a function or an object</b>. </li></ul> <tt></tt><br>
+
+ 
+
+
+The expected time required for the development of the application is (no more than) 6 hours.
+<h2>Test plans</h2>
+
+To check that the application fulfills the requirements, we could keep track of the moves done by the robot.
+For example:
+
+<pre>
+the robot starts from the HOME position, facing south (DOWN)
+when the RESUME button is pressed:
+	the robot starts to walk forward in small steps
+	the application saves the moves
+when the robot hits a wall:
+	the robot turn left
+	the application saves the moves
+If at any time the STOP button is pressed:
+	the robot stops its movement
+	wait the action on resume button
+the robot returns to the HOME position and show the moves
+</pre>
+
+
+
+In this way, when the application terminates, the string <kc>moves</kc> should have the typical structure of a 
+<a href="https://en.wikipedia.org/wiki/Regular_expression" target="web"><em>regular expression</em></a>,
+that can be easily checked with a TestUnit software:
+<pre><kc>moves</kc>: <ks>"w*lw*lw*lw*l"</ks>     <kc><ks>*</ks> : repetion N times(N&gt;=0) </kc></pre>
+
+  
+
+
+<h2>Project</h2>
+
+<p>The software system is focused on asynchronous interaction between the application and the robot, so it will be used WebSocket.</p>
+<h3>Nature of the application component</h3>
+<table>
+<tbody>
+<tr>
+<td style="width: 50%;">The application is a conventional Java program, represented in the figure as an object with internal threads.</td>
+<td style="width: 50%;"><center><img src="./resumableBoundaryWalker_files/projectArch.png" alt="projectArch0" width="60%"></center></td>
+</tr>
+</tbody>
+</table>
+<h3>A layered architecture</h3>
+<table style="width: 100%;">
+<tbody>
+<tr>
+<td style="width: 50%;">There are two ways of communication between the two macro-components, but the code must be as much indipendent as possible from the chosen one. This problem can be solved with a layered structure. For exemple, the pattern Facade can be used to hide the complexities of the larger system and provide a simpler interface shared by the two ways of communication. This interface can be structured with four basic methods, which are common to both HTTP and Websocket protocols. This methods can be:
+<pre>        
+public interface IssOperations {
+    void forward( String msg ) ;
+    void request( String msg );
+    void reply( String msg );
+    String requestSynch( String msg );
+}
+            </pre>
+<br> The method forward sends a message without waiting for the reply. On the contrary the method request waits for the answer sent by the method reply. Instead, the method requestSynch is introduced to facilitate the transition from procedure-call tomessage-passing. <br><br>
+<h3>Observable supports</h3>
+In order to exploit in a structured way the asynchronicity of the interaction, the reference design pattern is the Observer pattern. This pattern introduces an interface issObserver that defines a method that accepts two type of arguments:
+<pre>public interface IssObserver {
+    public void handleInfo(String info);
+    public void handleInfo(JSONObject info);
+}
+            </pre>
+This method handle the info releated to the movement of the robot. <br> This observable supports must implement an interface that adds new operations to the high-level communication interface:
+<pre>public interface IssCommSupport extends <a href="file:///C:/Users/batta/Desktop/IDS/app/src/main/java/it/unibo/interaction/IssOperations.java" target="code">IssOperations</a> {
+    void registerObserver( IssObserver obs );
+    void removeObserver( IssObserver obs );
+    void close();
+}
+            </pre>
+This interface manages the observers. <br><br> The figure shows an exemple of communication layer with observable support. </td>
+<td><center><img class="imgMargin" src="./resumableBoundaryWalker_files/issCommsLayers.png" alt="projectArch0" width="90%"></center></td>
+</tr>
+</tbody>
+</table>
+<h3>Creation method</h3>
+<p>A Factory can be used to create the chosen communication support. This pattern provides an interface to create an object, but lets the subclasses decide which object to instantiate. The Factory incorporates the creation of the necessary objects to handle the communication with the chosen protocol. This Factory must provide factory methods that return an object of type IssCommSupport.</p>
+<h3>Business logic</h3>
+<table style="width: 100%;">
+<tbody>
+<tr>
+<td style="width: 40%;">
+    The business logic is defined in an object of class RobotBoundaryLogic that is called by the observer RobotInputController initialized         to use the aril command-move language.
+    <br> The details related to the construction of the robot-moves history are embedded in the class RobotMovesInfo. ConsoleGui implements Observer, when the resume/stop buttons are pressed, the update method interacts with RobotInputController in order to complete the required operation
+<br>
+<br><br> The figure shows an exemple of application.</td>
+<td><center><img class="imgMargin" src="./resumableBoundaryWalker_files/businessLogic.png" alt="projectArch0" width="90%"></center></td>
+</tr>
+</tbody>
+</table> 
+ 
+
+
+<h2>Testing</h2> 
+ 
+
+<h2>Deployment</h2> 
+The deployment consists in the commit of the application on a project named <ks>iss2021_resumablebw</ks> of the MY GIT repository ( <k>https://github.com/dbattaglia97/battagliadario</k> ).
+<br><br>
+The final commit commit has done after <k>3</k> hours of work.
+ 
+<h2>Maintenance</h2> 
+ 
+<!-- USEFUL
+<table style="width:100%" border="1">
+<tr>
+<td style="width:50%">
+</td>
+<td></td>
+</tr>
+</table>
+ QUESTIONS:
+chiarisce cosa il committente intende con 'Optionally'  
+chiarisce cosa il committente intende con 'should remember' 
+chiarisce cosa il committente intende con 'mental map'
+definisce la user story in modo da comprendere TUTTI i requisiti (anche opzionali)
+discute se sia meglio avvalersi di HTTP o delle websocket e perchè
+discute se sia meglio usare il linguaggio di comando cril, aril (o altro) e perchè
+discute se sia meglio muovere il robot in modo random o in modo organizzato 
+discute se il ritorno alla den debba/possa avvenire senza ricalcare il percorso effettuato
+presenta ogni TestPlan collegandolo ad una user story e in modo 'concreto' (non come un insieme di intenti)
+propone diverse tipologie di scene/situazioni per il testing
+individua e propone (motivandola) una lista di priorità per il soddisfacimento dei requisiti 
+presenta una stima dei tempi di realizzazione 
+presenta un elenco delle risorse che sarebbe opportuno avere e/o procurarsi
+presenta una architettura di progetto
+presenta dettagli di progetto che permettono una precisa implementazione da parte di chi legge
+pone in evidenza le parti di funzionamento proattivo e quelle di funzionamento reattivo
+ECCEDE nelle dimensioni del file (al momento > 1600Kb)
+
+
+-->
+	      	
+<br><br> 	
+  
+
+<div style="background-color:rgba(86, 56, 253, 0.9); width:60%;text-align:left;color:white">
+By Dario Battaglia email: dario.battaglia2@studio.unibo.it  
+<img src="./resumableBoundaryWalker_files/darioBattaglia.jpg" alt="mbot" width="15%" height="15%">
+</div> 
+ 
+
+</body></html>
