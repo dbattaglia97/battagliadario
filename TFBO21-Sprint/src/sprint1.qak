@@ -1,0 +1,730 @@
+System carparking
+ 
+Request reqenter : reqenter(X)
+Reply enter: enter(SLOTNUM)
+   
+Request carenter: carenter(SLOTNUM)
+Reply receipt : receipt(TOKENID)
+    
+Request pickup : pickup(TOKENID)
+Reply pickupAccepted: pickupAccepted(TOKENID)
+    
+Event caroutdoorarrival : coa(V)
+Event carwithdrawn : cw(X)
+Event carindoorarrival : cia(V) 
+ 
+Event timeout 			: timeout(V)
+Event sensor 			: sensor(areaFree)
+Event weight		: weight(W)
+Event alarm 			: timeout(alarm)
+  
+Context ctxCarparking ip[host="localhost" port=8092]
+    
+QActor parkingservicegui1 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1	
+	#] 
+	State s0 initial{
+		println("	parkingservicegui1 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client1 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(name)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client1 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client1 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client1 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client1 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client1 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+}
+
+QActor parkingservicegui2 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui2 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client2 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client2 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client2 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client2 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client2 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client2 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+	
+}
+
+
+QActor parkingservicegui3 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui3 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client3 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client3 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client3 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client3 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client3 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client3 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+	
+}
+
+QActor parkingservicegui4 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui4 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client4 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client4 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client4 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client44 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client4 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client4 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+	
+}
+
+QActor parkingservicegui5 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegu5 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client5 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client5 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client5 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client5 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client5 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client5 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+}
+
+QActor parkingservicegui6 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui6 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client6 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client6 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client6 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client6 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client6 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client6 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+	
+}
+
+QActor parkingservicegui7 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui7 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client7 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client7 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client7 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client7 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client7 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client7 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+}
+
+QActor parkingservicegui8 context  ctxCarparking{
+	[# var SLOTNUM = -1
+		var TOKENID = -1
+		
+	#] 
+	State s0 initial{
+		println("	parkingservicegui8 (client mock)  STARTS")
+	}
+	Goto requestToEnter
+	
+	State requestToEnter{
+		println("	client8 requestToenter ")
+		request parkingmanagerservice -m reqenter : reqenter(client)
+	}
+	Transition t0 
+	      whenReply enter -> enterthecar
+	
+	State enterthecar{
+ 		onMsg( enter : enter(SLOTNUM)){
+			[# SLOTNUM = payloadArg(0 ).toInt() #]
+			println("	client8 receives SLOTNUM = $SLOTNUM ")
+		}		
+	}
+	Goto movethecartoindoor
+	
+	State movethecartoindoor{
+		println("	client8 moving the car in the INDOOR and press CARENTER ")
+		request parkingmanagerservice -m carenter : carenter($SLOTNUM)		
+	}
+	Transition t0 whenReply receipt -> afterreceipt
+	
+	
+	State afterreceipt{
+		onMsg( receipt : receipt(TOKENID)){
+			[# TOKENID = payloadArg(0).toInt()#]
+			println("	client8 receives TOKENID = $TOKENID ")
+		}
+		printCurrentMessage		
+	}
+		Transition t0 
+	      whenTime 10000 -> reqpickup
+	
+	State reqpickup{
+		println("	client8 wants to pickup TOKENID = $TOKENID ")
+		request parkingmanagerservice -m pickup : pickup($TOKENID)
+	}Transition t0 whenReply pickupAccepted -> waitForCarOutDoorArrival
+		
+	State 	waitForCarOutDoorArrival{
+	}Transition t0
+		whenEvent caroutdoorarrival -> pickup
+		
+	State pickup{
+		println("	client8 pickup TOKENID = $TOKENID ")
+		delay 2000 //in 2 secondi porta via l'auto da OUTDOOR
+		emit carwithdrawn : cw(bye)
+	}
+	
+	
+}
+  
+
+QActor outsonar context ctxCarparking{
+	State s0 initial{
+	}Goto working
+	
+	State working{
+		println("Sonar working")
+	}Transition t0 whenEvent caroutdoorarrival -> startTimer
+	
+	State startTimer{
+		println("Sonar startTimer")
+	}Transition t0 whenTime 10000 -> timeout
+					whenEvent carwithdrawn->working
+	
+	State timeout{
+		println("Sonar timeout")
+		emit timeout: timeout
+	}Goto working 
+}
+
+QActor weightsensor context ctxCarparking{
+	[#
+		var P = 0
+	#]
+	State s0 initial{
+		println("Weightsensor starts")
+	} Goto ready
+	
+	State ready{
+		println("Weightsensor waiting")
+	}Transition t0 whenEvent carindoorarrival -> simulate
+	
+	State simulate{ 
+		println("Weight simulation")
+		[# P =kotlin.random.Random.nextInt(500,4000) #]
+		emit weight : weight($P)
+	}Goto ready
+}
+
+
+
+QActor parkingmanagerservice context ctxCarparking{
+	[#
+	var prog= 0
+	var SLOTNUM=-1
+	var CARSLOTNUM=-1
+	var TOKENIN= -1
+	var boolIN=false
+	var boolOUT=false
+	var weightOK=false
+	var peso=-1
+	#]
+	 
+	State s0 initial{
+		solve( consult("sysRules.pl"))
+		solve( consult("parkingAreaKb.pl"))
+		println("Park System START | SERVICE")	
+	}
+	Goto checkIndoor
+	
+	State checkIndoor{
+		solve(changeTrolleyStatus(idle))
+		solve(acceptIN)
+		ifSolved{
+			[#boolIN=true#]
+		}else{
+			[#boolIN=false#]
+		}
+	}Goto checkOutdoor if [#boolIN==true#] else checkOnlyOutdoor
+	
+
+	State checkOutdoor{
+		solve(acceptOUT)
+		ifSolved{
+			[#boolOUT=true#]
+		}else{
+			[#boolOUT=false#]
+		}
+	}Goto allReady if [#boolOUT==true#] else indoorOnlyReady
+	
+	State checkOnlyOutdoor{
+		solve(acceptOUT)
+		ifSolved{
+			[#boolOUT=true#]
+		}else{
+			[#boolOUT=false#]
+		}
+	}Goto outdoorOnlyReady if [#boolOUT==true#] else waiting
+	
+	State indoorOnlyReady{
+		[#boolOUT=false#]
+		[#boolIN=false#]
+	}Transition t0 
+		whenTime 5000 ->moveToHome
+		whenRequest reqenter -> acceptin
+	
+	State outdoorOnlyReady{
+		[#boolIN=false#]
+		[#boolOUT=false#]
+	}Transition t0 
+		whenTime 5000 ->moveToHome
+		whenRequest pickup -> handlepickup
+					
+					
+	
+	State waiting{
+	}Transition t0 whenTime 5000 ->moveToHome
+	
+	
+	State moveToHome{
+		println("Moving Trolley to HOME")
+		//Invio comando
+	}Goto checkIndoor
+	
+	State allReady{
+		solve(changeTrolleyStatus(idle))
+		println("parkingmanagerservice waiting ...")
+	}Transition t0
+		whenTime 5000 ->moveToHome
+		whenRequest reqenter -> acceptin 
+		whenRequest pickup -> handlepickup
+	 
+	State acceptin{
+			/*==========[acceptIN]==========*/
+			solve(slotFree(S))
+			[# SLOTNUM = getCurSol("S").toString().toInt()#]
+			/*==========[informIN]==========*/
+			println("Reply to reqenter with $SLOTNUM  | SERVICE")
+			replyTo reqenter with enter : enter ($SLOTNUM)
+			/*==========[moveToIn]==========*/
+			solve(changeTrolleyStatus(working))
+			println("Trolley is moving to Indoor")
+			solve(indoorOccupata) 
+	} Transition t0 whenRequest carenter -> carenter
+	
+							
+					
+	State carenter{
+		[# prog++#]
+		println("carindoorarrival emitted in order to be processed by  WEIGHT SENSOR   | SERVICE")	
+		emit carindoorarrival : cia(car_arrived)  //questo lo deve catturare il weightsensor	
+	} Transition t0
+				whenEvent weight -> weightCheck
+	
+	
+	State weightCheck{
+		onMsg(weight : weight(W)){
+			[# 
+				peso = payloadArg(0)
+				println("Weight: " + peso)
+				if(peso>=500){ weightOK=true}
+				else{ weightOK=false}
+			#]
+	 	}
+	}Goto moveToSlotIn if [#weightOK==true#] else weightNotOK
+	
+	State weightNotOK{
+		println("There isn't a car in the indoor")
+	}Goto moveToHome
+	
+	State moveToSlotIn{
+		println("SLOTNUM IS $SLOTNUM")
+		solve(occupaSlot($SLOTNUM))	 		
+		/*==========[moveToSlotIn]==========*/
+		println("Trolley moves from entrance to slot $SLOTNUM | SERVICE")
+	} Transition t0
+			whenTime 4000 -> receipt //simuliamo lo spostamento del Trolley
+			
+	State receipt{ 
+		solve(indoorLiberata)
+		[# var TOKENID = "$prog$SLOTNUM"#]
+		solve(addToken($TOKENID))
+		/*==========[receipt]==========*/
+		println("REPLY TO CARENTER WITH RECEIPT $TOKENID | SERVICE")
+		replyTo carenter with receipt : receipt($TOKENID)
+		updateResource [# "{\"receipt\":\"$TOKENID\"}" #]
+	} Transition t0 
+					whenTime 1000 -> checkIndoor
+					
+	State handlepickup{
+			onMsg (pickup : pickup(TOKENIN)){
+			/*==========[findSlot]==========*/
+				[# TOKENIN = payloadArg(0).toInt() #]} //tokenIN è il token fornito dal client
+				println("TOKEN FORNITO DAL CLIENT PER IL PICKUP $TOKENIN")
+				solve(token($TOKENIN))
+				ifSolved{
+					println("Elaborazione token OK, token= tokenIN| SERVICE")
+					replyTo pickup with pickupAccepted: pickupAccepted($TOKENIN)
+				}else{
+					println("TOKEN NON PRESENTE")
+					//Eventuale segnalazione
+				}
+	}Goto picking
+	
+	  
+	State picking{	 	
+		println("Trolley picking car | SERVICE")
+		[#var CARSLOTNUM= TOKENIN%10#]
+		/*==========[moveToSlotOut]==========*/
+		println("Trolley picking car from slot $CARSLOTNUM result from $TOKENIN % 10 | SERVICE")
+		delay 3000 
+		
+		solve(liberaSlot($CARSLOTNUM))
+		solve(removeToken($TOKENIN))
+		solve(outdoorOccupata)
+		           
+		/*==========[moveToOut]==========*/
+		println("Car is in Outdoor area | SERVICE")
+		emit caroutdoorarrival : coa(car_outdoor)  //deve essere percepito dal sensore
+	} 
+	Transition t0 	whenEvent carwithdrawn  -> withdrawn
+					whenEvent timeout -> timeout
+   
+	State withdrawn{
+		solve(outdoorLiberata)
+		println("Car withdrawn!")
+	} 
+	Goto checkIndoor
+	
+	State timeout{
+		println("%%%% TIMEOUT %%%%" )
+		emit alarm : timeout(alarm)		
+	}
+					
+}
+
+
+
+
+
+
